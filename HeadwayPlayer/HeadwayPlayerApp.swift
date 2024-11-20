@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct HeadwayPlayerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BookSummaryView(
+                store: Store(initialState: BookSummaryFeature.State()) { BookSummaryFeature() }
+            )
         }
     }
 }
