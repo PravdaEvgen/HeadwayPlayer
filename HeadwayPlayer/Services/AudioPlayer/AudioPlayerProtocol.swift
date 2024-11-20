@@ -23,5 +23,5 @@ protocol AudioPlayerProtocol: AnyObject {
 
 enum AudioPlayerKey: DependencyKey {
     static let liveValue: any AudioPlayerProtocol = AudioPlayer()
-    static var testValue: any AudioPlayerProtocol = liveValue
+    static var testValue: any AudioPlayerProtocol = MockAudioPlayer()
 }

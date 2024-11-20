@@ -1,5 +1,5 @@
 //
-//  AudioPlayerClient.swift
+//  AudioPlayer.swift
 //  HeadwayPlayer
 //
 //  Created by Yevhen Pravda on 19.11.2024.
@@ -8,7 +8,7 @@
 import AVFoundation
 
 final class AudioPlayer: AudioPlayerProtocol {
-    private let player: AVPlayer
+    private let player: AVPlayer = .init()
     private(set) var isPlaying = false
     private var playbackSpeed: Float = 1.0 {
         didSet {
@@ -20,10 +20,6 @@ final class AudioPlayer: AudioPlayerProtocol {
     private var currentItemObservation: NSKeyValueObservation?
     private var playerItemErrorObservation: NSKeyValueObservation?
     private var playerStatusObservation: NSKeyValueObservation?
-    
-    init(player: AVPlayer = .init()) {
-        self.player = player
-    }
     
     func load(url: URL) {
         player.pause()
