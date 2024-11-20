@@ -148,4 +148,44 @@ struct HeadwayPlayerTests {
             $0.isPlaying = true
         }
     }
+    
+    @Test
+    func seekToValue() async {
+        let clock = TestClock()
+        let store = TestStore(initialState: BookSummaryFeature.State()) {
+            BookSummaryFeature()
+        } withDependencies: {
+            $0.continuousClock = clock
+        }
+        store.exhaustivity = .off
+        
+        await store.send(.onAppear)
+        await store.send(.playChapter(0))
+        await store.send(.startDurationUpdateTimer)
+        await store.send(.seekTo(10))
+        await clock.advance(by: .seconds(10))
+        await store.receive(\.updateCurrentProgress) {
+            $0.currentProgress = 10
+        }
+    }
+    
+    @Test
+    func updateDuration() async {
+        let testAudioPlayer = MockAudioPlayer()
+        let store = TestStore(initialState: BookSummaryFeature.State()) {
+            BookSummaryFeature()
+        } withDependencies: {
+            $0[AudioPlayerKey.self] = testAudioPlayer
+            $0.continuousClock = TestClock()
+        }
+        store.exhaustivity = .off
+        
+        await store.send(.onAppear)
+        await store.send(.playChapter(0))
+        testAudioPlayer.setDuration(10)
+        await store.send(.fetchDuration)
+        await store.receive(\.updateDuration) {
+            $0.duration = 10
+        }
+    }
 }
